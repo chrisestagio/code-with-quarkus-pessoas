@@ -1,63 +1,41 @@
 package org.acme;
 
-import jakarta.ws.rs.*;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
+public class Pessoa {
 
-import java.util.ArrayList;
-import java.util.List;
+    private Long id;
+    private String nome;
+    private int idade;
 
-@Path("/pessoas")
-@Consumes(MediaType.APPLICATION_JSON)
-@Produces(MediaType.APPLICATION_JSON)
-public class PessoaResource {
-
-    private static List<Pessoa> lista = new ArrayList<>();
-    private static long contadorId = 1;
-
-    @GET
-    public List<Pessoa> listar() {
-        return lista;
+    public Pessoa() {
     }
 
-    @POST
-    public Response criar(Pessoa pessoa) {
-        pessoa.setId(contadorId++);
-        lista.add(pessoa);
-        return Response.status(Response.Status.CREATED).entity(pessoa).build();
+    public Pessoa(Long id, String nome, int idade) {
+        this.id = id;
+        this.nome = nome;
+        this.idade = idade;
     }
 
-    @GET
-    @Path("/{id}")
-    public Response buscar(@PathParam("id") long id) {
-        return lista.stream()
-                .filter(p -> p.getId() == id)
-                .findFirst()
-                .map(p -> Response.ok(p).build())
-                .orElse(Response.status(Response.Status.NOT_FOUND).build());
+    public Long getId() {
+        return id;
     }
 
-    @PUT
-    @Path("/{id}")
-    public Response atualizar(@PathParam("id") long id, Pessoa dados) {
-        for (Pessoa p : lista) {
-            if (p.getId() == id) {
-                p.setNome(dados.getNome());
-                p.setIdade(dados.getIdade());
-                return Response.ok(p).build();
-            }
-        }
-        return Response.status(Response.Status.NOT_FOUND).build();
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    @DELETE
-    @Path("/{id}")
-    public Response deletar(@PathParam("id") long id) {
-        boolean removed = lista.removeIf(p -> p.getId() == id);
-        if (removed) {
-            return Response.noContent().build();
-        }
-        return Response.status(Response.Status.NOT_FOUND).build();
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public int getIdade() {
+        return idade;
+    }
+
+    public void setIdade(int idade) {
+        this.idade = idade;
     }
 }
-
